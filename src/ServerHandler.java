@@ -12,9 +12,10 @@ public class ServerHandler implements Runnable {
     DatagramPacket DpReceive = null;
 
     private DatagramSocket ds;
-    private int servingServerSocket = 3050;
+    private int servingServerSocket;
 
-    public ServerHandler() {
+    public ServerHandler(int serverSocket) {
+        this.servingServerSocket = serverSocket;
     }
 
     public ServerHandler(DatagramSocket ds) {
@@ -54,14 +55,15 @@ public class ServerHandler implements Runnable {
 
                 else if (clientR.getClientStatus().equals("CHANGE-SERVER")) {
                     System.out.println("This server is no longer serving, you must talk to the other server. Its socket number is: " + clientR.getServerSocket());
-                    //setServingServerSocket(clientR.getServerSocket());
-                    //clientR.setServerSocket(clientR.getServerSocket());
-                    //System.out.println("new server socket: " + clientR.getServerSocket());
+                    // TESTING - must send this new server's socket # to client.java
+                    setServingServerSocket(clientR.getServerSocket());
+                    clientR.setServerSocket(clientR.getServerSocket());
                 }
 
                 else if (clientR.getClientStatus().equals("REGISTERED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
 
                 else if (clientR.getClientStatus().equals("REGISTER-DENIED")) {
@@ -69,16 +71,19 @@ public class ServerHandler implements Runnable {
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Reason: " + clientR.getReason());
                     clientR.setClientStatus("REGISTERED");
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
 
                 else if (clientR.getClientStatus().equals("DE-REGISTER")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("Name: " + clientR.gettClienName());
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
 
                 else if (clientR.getClientStatus().equals("UPDATE-CONFIRMED")) {
                     String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
                     System.out.println(out);
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
 
                 try {

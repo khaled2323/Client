@@ -23,12 +23,9 @@ public class client {
 	
 	public static void main(String [] args) throws IOException {
 		ArrayList<ServerHandler> server = new ArrayList<>();
-		ExecutorService pool = Executors.newFixedThreadPool(2); // can increase this # depending on # of clients
+		ExecutorService pool = Executors.newFixedThreadPool(10); // max number of clients
 
 		Random r = new Random();
-		ServerHandler serverHandler = new ServerHandler();
-		//int serverSocket = serverHandler.getServingServerSocket();
-		int serverSocket = 3050;
 		int socketN = 0;
 
 		String Ip_Addr = null;
@@ -38,6 +35,7 @@ public class client {
 		 System.out.println("Enter Client Socket Number");
 		String name = null;
 		int socketNum = 0;
+		int serverSocket = 3050;
 		InetAddress ip = InetAddress.getLocalHost();
 		
 		int orderNumber = 0;
@@ -46,10 +44,18 @@ public class client {
 		System.out.println("<DE-REGISTER> <RQ#> <Name>");
 		System.out.println("<UPDATE> <RQ#> <Name> <IP Address> <Socket#>");
 		System.out.println("<SUBJECTS? <RQ#> <Name> <List of Subjects>"); // not done but super easy
+		System.out.println("Enter a Request in one of the above formats");
 
 		while (true) {
-			System.out.println("\nEnter a Request in one of the above formats");
-			
+			// TESTING - Trying to get new server's socket # from ServerHandler.java
+			ServerHandler serverHandler = new ServerHandler(serverSocket);
+			serverSocket = serverHandler.getServingServerSocket();
+
+			// TESTING: to see if client can get Server B's socket # from ServerHandler
+			System.out.println("TEST - Server's socket #: " + serverSocket);
+
+			//System.out.println("\nEnter a Request in one of the above formats");
+
 			Scanner s = new Scanner(System.in);
 			String req = s.nextLine();
 			String [] input = req.split("\\s+");
@@ -61,7 +67,7 @@ public class client {
 
 			// testing generating random ip address and socket number
 			Ip_Addr = r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
-			socketN = r.nextInt(100); // sample socket#
+			socketN = r.nextInt(100) + 1; // sample socket#
 			}
 			else if (req.equals("DE-REGISTER")) {
 				orderNumber++; // ORDER NUMBER (int)
@@ -93,12 +99,12 @@ public class client {
 			    	ex.printStackTrace();
 			    }
 
-			// running server threads to listen to servers
+			System.out.println(ds + "socket num " + socketN);
+
+			// running ServerHandler threads to listen to servers
 			ServerHandler serverThread = new ServerHandler(ds);
 			server.add(serverThread);
 			pool.execute(serverThread);
-
-			System.out.println(ds + "socket num " + socketN);
 		} // end of while loop
 	} // end of main
 
@@ -112,6 +118,6 @@ public class client {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	} // end of UpdateDiagram
 
-}
+} // end of class client
