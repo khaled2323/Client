@@ -5,8 +5,9 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.concurrent.Callable;
 
-public class ServerHandler implements Runnable {
+public class ServerHandler implements Callable<RSS> {
     RSS clientR;
     byte[] receive = new byte[65535];
     DatagramPacket DpReceive = null;
@@ -30,9 +31,15 @@ public class ServerHandler implements Runnable {
         return this.servingServerSocket;
     }
 
-    @Override
-    public void run() {
-        try {
+	/*
+	 * @Override public void run() {
+	 * 
+	 * } // end of run
+	 */
+	@Override
+	public RSS call() throws Exception {
+		// TODO Auto-generated method stub
+		try {
             while (true) {
                 DpReceive = new DatagramPacket(receive, receive.length);
 
@@ -58,12 +65,17 @@ public class ServerHandler implements Runnable {
                     // TESTING - must send this new server's socket # to client.java
                     setServingServerSocket(clientR.getServerSocket());
                     clientR.setServerSocket(clientR.getServerSocket());
+                    servingServerSocket = clientR.getServerSocket();
+                    
+                    return clientR;
                 }
 
                 else if (clientR.getClientStatus().equals("REGISTERED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
-                    System.out.println("\nEnter a Request in one of the above formats");
+                    System.out.println("\nEnter a Request in one of the above formats REGISTERED");
+                    servingServerSocket = clientR.getServerSocket();
+                 
                 }
 
                 else if (clientR.getClientStatus().equals("REGISTER-DENIED")) {
@@ -72,30 +84,38 @@ public class ServerHandler implements Runnable {
                     System.out.println("Reason: " + clientR.getReason());
                     clientR.setClientStatus("REGISTERED");
                     System.out.println("\nEnter a Request in one of the above formats");
+             
                 }
 
                 else if (clientR.getClientStatus().equals("DE-REGISTER")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("Name: " + clientR.gettClienName());
                     System.out.println("\nEnter a Request in one of the above formats");
+                   
                 }
 
                 else if (clientR.getClientStatus().equals("UPDATE-CONFIRMED")) {
                     String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
                     System.out.println(out);
                     System.out.println("\nEnter a Request in one of the above formats");
+                 
                 }
-
+              
                 try {
                     iStream.close();
+                   
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+              
             } // end of while
+        	
         } catch	(IOException e) {
             System.err.println("IO exception in Client Handler");
             System.err.println(e.getStackTrace());
         }
-    } // end of run
+		 System.err.println("NOT ABLE TO REACH HERE");
+		  return clientR;
+	}
 
 } // end of class ServerHandler
