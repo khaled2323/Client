@@ -107,9 +107,7 @@ public class client {
 			
 
 			DatagramPacket dpSend = new DatagramPacket(serializedMessage, serializedMessage.length, ip, client.serverSocket);
-			DatagramPacket dpSend2 = new DatagramPacket(serializedMessage, serializedMessage.length, ip, 3051);
 				ds.send(dpSend);
-				ds.send(dpSend2);
 			    } catch (IOException ex) {
 			    	ex.printStackTrace();
 			    }
