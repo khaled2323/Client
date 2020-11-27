@@ -10,18 +10,27 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.security.Provider.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class client {
 	
-	public static void main(String [] args) throws IOException {
+	private static int serverSocket;
+	private static Future<RSS> serving = null;
+
+	public static void main(String [] args) throws IOException, TimeoutException {
 		ArrayList<ServerHandler> server = new ArrayList<>();
 		ExecutorService pool = Executors.newFixedThreadPool(10); // max number of clients
 
@@ -30,14 +39,16 @@ public class client {
 
 		String Ip_Addr = null;
 		DatagramSocket ds = new DatagramSocket(socketN);
-
+		ExecutorService es = Executors.newFixedThreadPool(1);
+		
+		boolean talkingToServer = false;
 		System.out.println("Enter Client Name"); 
 		 System.out.println("Enter Client Socket Number");
 		String name = null;
 		int socketNum = 0;
-		int serverSocket = 3050;
+		client.serverSocket = 3050;
 		InetAddress ip = InetAddress.getLocalHost();
-		
+		ServerHandler serverHandler = new ServerHandler(client.serverSocket);
 		int orderNumber = 0;
 	
 		System.out.println("<REGISTER> <RQ#> <Name> <IP Address> <Socket#>");
@@ -48,11 +59,11 @@ public class client {
 
 		while (true) {
 			// TESTING - Trying to get new server's socket # from ServerHandler.java
-			ServerHandler serverHandler = new ServerHandler(serverSocket);
-			serverSocket = serverHandler.getServingServerSocket();
+			
+			//serverSocket = serverHandler.getServingServerSocket();
 
 			// TESTING: to see if client can get Server B's socket # from ServerHandler
-			System.out.println("TEST - Server's socket #: " + serverSocket);
+			System.out.println("TEST - Server's socket #: " + client.serverSocket);
 
 			//System.out.println("\nEnter a Request in one of the above formats");
 
@@ -60,7 +71,8 @@ public class client {
 			String req = s.nextLine();
 			String [] input = req.split("\\s+");
 			req = input[0]; // REQUEST
-
+			
+			
 			if (req.equals("REGISTER") || req.equals("UPDATE")) {
 			orderNumber++;
 			name = input[1];
@@ -81,6 +93,7 @@ public class client {
 
 			RSS c = new RSS(name, socketN, orderNumber, ip, req);
 			c.setClientSimulationIp(Ip_Addr);
+			c.setServerSocket(client.serverSocket);
 
 			// Serialize to a byte array
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
@@ -93,8 +106,10 @@ public class client {
 			byte[] serializedMessage = bStream.toByteArray();
 			
 
-			DatagramPacket dpSend = new DatagramPacket(serializedMessage, serializedMessage.length, ip, serverSocket);
+			DatagramPacket dpSend = new DatagramPacket(serializedMessage, serializedMessage.length, ip, client.serverSocket);
+			DatagramPacket dpSend2 = new DatagramPacket(serializedMessage, serializedMessage.length, ip, 3051);
 				ds.send(dpSend);
+				ds.send(dpSend2);
 			    } catch (IOException ex) {
 			    	ex.printStackTrace();
 			    }
@@ -102,9 +117,42 @@ public class client {
 			System.out.println(ds + "socket num " + socketN);
 
 			// running ServerHandler threads to listen to servers
-			ServerHandler serverThread = new ServerHandler(ds);
-			server.add(serverThread);
-			pool.execute(serverThread);
+			/*
+			 * ServerHandler serverThread = new ServerHandler(ds); server.add(serverThread);
+			 * pool.execute(serverThread);
+			 */
+			
+		    // converting runnable task to callable
+		    //Callable<Integer> callable = new ServerHandler(ds);
+		    // submit method
+		    //int timeout = 2;
+			talkingToServer = true;
+			serving = es.submit(new ServerHandler(ds));
+			new Thread(() -> {
+			    //Do whatever
+			    try {
+			    	//System.out.println("here- socket is " + c.getServerSocket());
+			    	
+			      RSS temp = serving.get(); // STUCK HERE
+			      
+			    	System.out.println("NEW AND DONE Result- " + temp.getServerSocket());
+			    	if(temp.getServerSocket() != 0) {
+			    		client.serverSocket = temp.getServerSocket();
+			    		
+			    		
+			    	}
+			    	
+			    } catch (InterruptedException | ExecutionException e) {
+			      // TODO Auto-generated catch block
+			      e.printStackTrace();
+			    }
+			}).start();
+	         
+	        
+
+		    //es.shutdown();
+		    talkingToServer = false;
+			
 		} // end of while loop
 	} // end of main
 
