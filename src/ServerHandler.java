@@ -100,6 +100,26 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
+                else if (clientR.getClientStatus().equals("SUBJECT-UPDATED")) {
+                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
+                    System.out.println(out);
+                    System.out.println("\nEnter a Request in one of the above formats");
+                 
+                }
+                else if (clientR.getClientStatus().equals("SUBJECT-REJECTED")) {
+                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
+                    System.out.println(out);
+                    System.out.println("\nEnter a Request in one of the above formats");
+                 
+                }
+                else if (clientR.getClientStatus().equals("MESSAGE")) {
+                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
+                    
+                    System.out.println(out);
+                    System.out.println("\n MESSAGE RECEIVED, THE RELATED SUBJECT IS: "+ clientR.getsubject()+ "THE MESSAGE "+ clientR.getMessage());
+                    System.out.println("\nEnter a Request in one of the above formats");
+                 
+                }
               
                 try {
                     iStream.close();

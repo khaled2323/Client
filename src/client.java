@@ -39,9 +39,11 @@ public class client {
 
 		String Ip_Addr = null;
 		DatagramSocket ds = new DatagramSocket(socketN);
-		ExecutorService es = Executors.newFixedThreadPool(1);
+		ExecutorService es = Executors.newFixedThreadPool(10);
 		
 		boolean talkingToServer = false;
+		String subject = null;
+		String message = null;
 		System.out.println("Enter Client Name"); 
 		 System.out.println("Enter Client Socket Number");
 		String name = null;
@@ -50,14 +52,25 @@ public class client {
 		InetAddress ip = InetAddress.getLocalHost();
 		ServerHandler serverHandler = new ServerHandler(client.serverSocket);
 		int orderNumber = 0;
-	
+	    ArrayList<String> subjects = new ArrayList<String>();
 		System.out.println("<REGISTER> <RQ#> <Name> <IP Address> <Socket#>");
 		System.out.println("<DE-REGISTER> <RQ#> <Name>");
 		System.out.println("<UPDATE> <RQ#> <Name> <IP Address> <Socket#>");
-		System.out.println("<SUBJECTS? <RQ#> <Name> <List of Subjects>"); // not done but super easy
+		System.out.println("<SUBJECTS> <Name> <number Of subjects>  <List of Subjects>"); // not done but super easy
 		System.out.println("Enter a Request in one of the above formats");
-
+		// testing generating random ip address and socket number
+		Ip_Addr = r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
+		socketN = r.nextInt(100) + 1; // sample socket#
 		while (true) {
+			// TESTING - Trying to get new server's socket # from ServerHandler.java
+			
+			//serverSocket = serverHandler.getServingServerSocket();
+
+			// TESTING: to see if client can get Server B's socket # from ServerHandler
+			System.out.println("TEST - Server's socket #: " + client.serverSocket);
+
+			//System.out.println("\nEnter a Request in one of the above formats");
+
 			Scanner s = new Scanner(System.in);
 			String req = s.nextLine();
 			String [] input = req.split("\\s+");
@@ -68,15 +81,28 @@ public class client {
 			orderNumber++;
 			name = input[1];
 
-			// testing generating random ip address and socket number
-			Ip_Addr = r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
-			socketN = r.nextInt(100) + 1; // sample socket#
+		
 			}
 			else if (req.equals("DE-REGISTER")) {
 				orderNumber++; // ORDER NUMBER (int)
 				name = input[1];
 			}
-
+			else if (req.equals("SUBJECTS")) {
+				orderNumber++; // ORDER NUMBER (int)
+				name = input[1];
+				int subjNum = Integer.parseInt(input[2]);
+				for (int i=0;i<subjNum;i++) {
+					subjects.add(input[i+3]);
+				}
+			}else if (req.equals("PUBLISH")) {
+				orderNumber++; // ORDER NUMBER (int)
+				name = input[1];
+				subject = input[2];
+				System.out.println("Enter a message related to this "+ subject);
+				message = s.nextLine();
+			}
+			
+			
 			if(socketNum != socketN) {
 			 ds = new DatagramSocket(socketN);
 			 socketNum = socketN;
@@ -86,7 +112,14 @@ public class client {
 			c.setClientSimulationIp(Ip_Addr);
 			c.setServerSocket(client.serverSocket);
 			c.setFrom("CLIENT");
-
+			// check if subjects are asked for
+			if(subjects != null) {
+			c.setSubjects(subjects);
+			}
+			if(subject != null) {
+				c.setSubject(subject);
+				c.setMessage(message);
+				}
 			// Serialize to a byte array
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			
@@ -96,14 +129,19 @@ public class client {
 			oo.close();
 
 			byte[] serializedMessage = bStream.toByteArray();
+			
 
 			DatagramPacket dpSend = new DatagramPacket(serializedMessage, serializedMessage.length, ip, client.serverSocket);
+			
 				ds.send(dpSend);
+			
 			    } catch (IOException ex) {
 			    	ex.printStackTrace();
 			    }
 
 			System.out.println(ds + "socket num " + socketN);
+
+			 subjects = new ArrayList<String>();
 
 			// running ServerHandler threads to listen to servers
 			/*
@@ -122,10 +160,13 @@ public class client {
 			    try {
 			    	//System.out.println("here- socket is " + c.getServerSocket());
 			    	
-			      RSS temp = serving.get(); // STUCK HERE
+			      RSS temp = serving.get(); 
 			      
+			    	System.out.println("NEW AND DONE Result- " + temp.getServerSocket());
 			    	if(temp.getServerSocket() != 0) {
 			    		client.serverSocket = temp.getServerSocket();
+			    		
+			    		
 			    	}
 			    	
 			    } catch (InterruptedException | ExecutionException e) {

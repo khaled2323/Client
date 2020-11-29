@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 public class RSS implements java.io.Serializable{
 private String name;
@@ -14,6 +15,9 @@ private String status;
 private String reason;
 private String clientIp;
 private int serverSocket;
+private String subject;
+private String message;
+private ArrayList<String> subjects =null;
 private String sentFrom;
 
 public RSS(String n, int s, int nu, InetAddress ip, String r){
@@ -36,6 +40,24 @@ void setClientStatus(String m) {
 }
 String getClientStatus() {
 	return status;
+}
+void setSubject(String m) {
+	subject = m;
+}
+String getsubject() {
+	return subject;
+}
+void setMessage(String m) {
+	message = m;
+}
+String getMessage() {
+	return message;
+}
+void setSubjects(ArrayList<String> m) {
+	subjects = m;
+}
+ArrayList<String> getSubjects() {
+	return subjects;
 }
 void setClientSimulationIp(String m) {
 	clientIp = m;
@@ -68,16 +90,21 @@ int getOrderNumber(){
 	return orderNum;
 }
 
-InetAddress gettClientIp(){
-	return IpAddress;
-}
-
 void setFrom(String from) {
-	this.sentFrom = from;
+		this.sentFrom = from;
 }
 
 String from() {
-	return sentFrom;
+		return sentFrom;
+}
+
+ArrayList<String> deleteSubjects(ArrayList<String> m) {
+	m.clear();
+	return m;
+	
+}
+InetAddress gettClientIp(){
+	return IpAddress;
 }
 
 void checkData() {
