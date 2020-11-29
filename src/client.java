@@ -58,15 +58,6 @@ public class client {
 		System.out.println("Enter a Request in one of the above formats");
 
 		while (true) {
-			// TESTING - Trying to get new server's socket # from ServerHandler.java
-			
-			//serverSocket = serverHandler.getServingServerSocket();
-
-			// TESTING: to see if client can get Server B's socket # from ServerHandler
-			System.out.println("TEST - Server's socket #: " + client.serverSocket);
-
-			//System.out.println("\nEnter a Request in one of the above formats");
-
 			Scanner s = new Scanner(System.in);
 			String req = s.nextLine();
 			String [] input = req.split("\\s+");
@@ -94,6 +85,7 @@ public class client {
 			RSS c = new RSS(name, socketN, orderNumber, ip, req);
 			c.setClientSimulationIp(Ip_Addr);
 			c.setServerSocket(client.serverSocket);
+			c.setFrom("CLIENT");
 
 			// Serialize to a byte array
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
@@ -104,7 +96,6 @@ public class client {
 			oo.close();
 
 			byte[] serializedMessage = bStream.toByteArray();
-			
 
 			DatagramPacket dpSend = new DatagramPacket(serializedMessage, serializedMessage.length, ip, client.serverSocket);
 				ds.send(dpSend);
@@ -133,11 +124,8 @@ public class client {
 			    	
 			      RSS temp = serving.get(); // STUCK HERE
 			      
-			    	System.out.println("NEW AND DONE Result- " + temp.getServerSocket());
 			    	if(temp.getServerSocket() != 0) {
 			    		client.serverSocket = temp.getServerSocket();
-			    		
-			    		
 			    	}
 			    	
 			    } catch (InterruptedException | ExecutionException e) {
