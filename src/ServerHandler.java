@@ -95,30 +95,50 @@ public class ServerHandler implements Callable<RSS> {
                 }
 
                 else if (clientR.getClientStatus().equals("UPDATE-CONFIRMED")) {
-                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
-                    System.out.println(out);
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Name: " + clientR.gettClienName());
+                    System.out.println("IP: " + clientR.getClientSimulationIp());
+                    System.out.println("Socket: " + clientR.gettClientSocket());
+                    System.out.println("\nEnter a Request in one of the above formats");
+                 
+                }
+                else if (clientR.getClientStatus().equals("UPDATE-DENIED")) {
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Reason: " + clientR.getReason());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
                 else if (clientR.getClientStatus().equals("SUBJECT-UPDATED")) {
-                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
-                    System.out.println(out);
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Name: " + clientR.gettClienName());
+                    System.out.println("Subject: " + clientR.getsubject());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
                 else if (clientR.getClientStatus().equals("SUBJECT-REJECTED")) {
-                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
-                    System.out.println(out);
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Reason: " + clientR.getReason());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
-                else if (clientR.getClientStatus().equals("MESSAGE")) {
-                    String out = clientR.getClientStatus() + " " + clientR.getOrderNumber() + " " + clientR.gettClienName() + " " + clientR.getClientSimulationIp() + " " + clientR.gettClientSocket();
-                    
-                    System.out.println(out);
+                else if (clientR.getClientStatus().equals("MESSAGE")) {                          
+                	System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Name: " + clientR.gettClienName());
+                    System.out.println("IP: " + clientR.getClientSimulationIp());
+                    System.out.println("Socket: " + clientR.gettClientSocket());
                     System.out.println("\n MESSAGE RECEIVED, THE RELATED SUBJECT IS: "+ clientR.getsubject()+ "THE MESSAGE "+ clientR.getMessage());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
+                }
+                else if (clientR.getClientStatus().equals("PUBLISH-DENIED")) {
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Reason: " + clientR.getReason());
                 }
               
                 try {
