@@ -44,8 +44,6 @@ public class client {
 		boolean talkingToServer = false;
 		String subject = null;
 		String message = null;
-		System.out.println("Enter Client Name"); 
-		 System.out.println("Enter Client Socket Number");
 		String name = null;
 		int socketNum = 0;
 		client.serverSocket = 3050;
@@ -56,7 +54,8 @@ public class client {
 		System.out.println("<REGISTER> <RQ#> <Name> <IP Address> <Socket#>");
 		System.out.println("<DE-REGISTER> <RQ#> <Name>");
 		System.out.println("<UPDATE> <RQ#> <Name> <IP Address> <Socket#>");
-		System.out.println("<SUBJECTS> <Name> <number Of subjects>  <List of Subjects>"); // not done but super easy
+		System.out.println("<SUBJECTS> <Name> <Number of Subjects>  <List of Subjects>");
+		System.out.println("<PUBLISH> <RQ#> <Name> <Subject> <Text>");
 		System.out.println("Enter a Request in one of the above formats");
 		// testing generating random ip address and socket number
 		Ip_Addr = r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
@@ -66,8 +65,6 @@ public class client {
 			
 			//serverSocket = serverHandler.getServingServerSocket();
 
-			// TESTING: to see if client can get Server B's socket # from ServerHandler
-			System.out.println("TEST - Server's socket #: " + client.serverSocket);
 
 			//System.out.println("\nEnter a Request in one of the above formats");
 
@@ -162,7 +159,6 @@ public class client {
 			    	
 			      RSS temp = serving.get(); 
 			      
-			    	System.out.println("NEW AND DONE Result- " + temp.getServerSocket());
 			    	if(temp.getServerSocket() != 0) {
 			    		client.serverSocket = temp.getServerSocket();
 			    		

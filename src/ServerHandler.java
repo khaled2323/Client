@@ -110,20 +110,20 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
-                else if (clientR.getClientStatus().equals("SUBJECT-UPDATED")) {
+                else if (clientR.getClientStatus().equals("SUBJECTS -UPDATED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Name: " + clientR.gettClienName());
-                    System.out.println("Subject: " + clientR.getsubject());
+                    System.out.println("Subject(s): " + clientR.getSubjects());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
-                else if (clientR.getClientStatus().equals("SUBJECT-REJECTED")) {
+                else if (clientR.getClientStatus().equals("SUBJECTS-REJECTED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Reason: " + clientR.getReason());
                     System.out.println("\nEnter a Request in one of the above formats");
-                 
+
                 }
                 else if (clientR.getClientStatus().equals("MESSAGE")) {                          
                 	System.out.println("Status: " + clientR.getClientStatus());
@@ -131,7 +131,7 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("Name: " + clientR.gettClienName());
                     System.out.println("IP: " + clientR.getClientSimulationIp());
                     System.out.println("Socket: " + clientR.gettClientSocket());
-                    System.out.println("\n MESSAGE RECEIVED, THE RELATED SUBJECT IS: "+ clientR.getsubject()+ "THE MESSAGE "+ clientR.getMessage());
+                    System.out.println("MESSAGE RECEIVED, THE RELATED SUBJECT IS: "+ clientR.getsubject()+ ", THE MESSAGE is "+ clientR.getMessage());
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
@@ -139,6 +139,7 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Reason: " + clientR.getReason());
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
               
                 try {
