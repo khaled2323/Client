@@ -110,7 +110,7 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("\nEnter a Request in one of the above formats");
                  
                 }
-                else if (clientR.getClientStatus().equals("SUBJECTS -UPDATED")) {
+                else if (clientR.getClientStatus().equals("SUBJECTS-UPDATED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Name: " + clientR.gettClienName());
