@@ -54,6 +54,7 @@ public class ServerHandler implements Callable<RSS> {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
+                System.out.println("Listening to Server: " + clientR.getServerSocket());
 
                 //System.out.println("Status : " + clientR.getClientStatus());
                 if (clientR == null) {
@@ -61,7 +62,7 @@ public class ServerHandler implements Callable<RSS> {
                 }
 
                 else if (clientR.getClientStatus().equals("CHANGE-SERVER")) {
-                    System.out.println("This server is no longer serving, you must talk to the other server. Its socket number is: " + clientR.getServerSocket());
+                    System.out.println("This server is no longer serving, you must talk to the other server\n with socket number is: " + clientR.getServerSocket());
                     // TESTING - must send this new server's socket # to client.java
                     setServingServerSocket(clientR.getServerSocket());
                     clientR.setServerSocket(clientR.getServerSocket());
@@ -73,7 +74,7 @@ public class ServerHandler implements Callable<RSS> {
                 else if (clientR.getClientStatus().equals("REGISTERED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
-                    System.out.println("\nEnter a Request in one of the above formats REGISTERED");
+                    System.out.println("\nEnter a Request in one of the above formats");
                     servingServerSocket = clientR.getServerSocket();
                  
                 }
