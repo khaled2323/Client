@@ -83,16 +83,21 @@ public class ServerHandler implements Callable<RSS> {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("RQ#: " + clientR.getOrderNumber());
                     System.out.println("Reason: " + clientR.getReason());
-                    clientR.setClientStatus("REGISTERED");
                     System.out.println("\nEnter a Request in one of the above formats");
              
                 }
 
-                else if (clientR.getClientStatus().equals("DE-REGISTER")) {
+                else if (clientR.getClientStatus().equals("DE-REGISTERED")) {
                     System.out.println("Status: " + clientR.getClientStatus());
                     System.out.println("Name: " + clientR.gettClienName());
                     System.out.println("\nEnter a Request in one of the above formats");
-                   
+                }
+
+                else if (clientR.getClientStatus().equals("DE-REGISTER-DENIED")) {
+                    System.out.println("Status: " + clientR.getClientStatus());
+                    System.out.println("RQ#: " + clientR.getOrderNumber());
+                    System.out.println("Reason: " + clientR.getReason());
+                    System.out.println("\nEnter a Request in one of the above formats");
                 }
 
                 else if (clientR.getClientStatus().equals("UPDATE-CONFIRMED")) {

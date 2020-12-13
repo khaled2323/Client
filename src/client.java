@@ -237,7 +237,7 @@ public class client {
 			orderNumber++; // ORDER NUMBER (int)
 			name = input[1];
 			subject = input[2];
-			System.out.println("Enter a message related to this "+ subject);
+			System.out.println("Enter a message related to "+ subject);
 			message = s.nextLine();
 		}
 
